@@ -2062,6 +2062,7 @@
   "Keyboard for the remote screen": "远程屏幕的键盘",
   "Couldn't connect to the remote screen. Check the computer's connection and try again.": "无法连接到远程屏幕。请检查电脑的网络连接后再试一次。",
   "Move active bots to the top": "将有新动态的机器人移到最前面",
+  "Freeze the lead bot at the top": "将主助理固定在列表顶部",
   "Delete old threads": "删除旧 thread",
   "Keep forever": "永久保留",
   "After {count} days": "{count} 天后",

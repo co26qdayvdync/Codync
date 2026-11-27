@@ -2062,6 +2062,7 @@
   "Keyboard for the remote screen": "Tastatur für den Remote-Bildschirm",
   "Couldn't connect to the remote screen. Check the computer's connection and try again.": "Keine Verbindung zum Remote-Bildschirm. Prüfe die Verbindung des Computers und versuche es erneut.",
   "Move active bots to the top": "Aktive Bots nach oben verschieben",
+  "Freeze the lead bot at the top": "Leitenden Agent ganz oben fixieren",
   "Delete old threads": "Alte Threads löschen",
   "Keep forever": "Für immer behalten",
   "After {count} days": "Nach {count} Tagen",

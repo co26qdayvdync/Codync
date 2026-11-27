@@ -46,7 +46,7 @@ pub use commands::listed as agent_commands;
 pub use compaction::{context_window, offers_threshold};
 pub(crate) use fallback::{kept_step, owe_move};
 use inflight::Inflight;
-pub(crate) use inflight::resumable;
+pub(crate) use inflight::{clear as clear_inflight, resumable};
 pub(crate) use launch::{launch_commands, select_model, start_agent, start_first, system_prompt};
 
 use crate::chat::context::{Identity, Snapshot};

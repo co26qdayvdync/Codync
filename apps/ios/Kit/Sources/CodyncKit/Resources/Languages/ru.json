@@ -2062,6 +2062,7 @@
   "Keyboard for the remote screen": "Клавиатура для удалённого экрана",
   "Couldn't connect to the remote screen. Check the computer's connection and try again.": "Не удалось подключиться к удалённому экрану. Проверьте подключение компьютера и попробуйте снова.",
   "Move active bots to the top": "Перемещать активных ботов наверх",
+  "Freeze the lead bot at the top": "Закрепить ведущего агента вверху списка",
   "Delete old threads": "Удалять старые threads",
   "Keep forever": "Хранить всегда",
   "After {count} days": "Через {count} дн.",

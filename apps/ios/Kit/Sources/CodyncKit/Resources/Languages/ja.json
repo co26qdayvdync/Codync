@@ -2062,6 +2062,7 @@
   "Keyboard for the remote screen": "リモート画面のキーボード",
   "Couldn't connect to the remote screen. Check the computer's connection and try again.": "リモート画面に接続できませんでした。コンピューターの接続を確認して、もう一度お試しください。",
   "Move active bots to the top": "動きのあったボットを上に移動",
+  "Freeze the lead bot at the top": "リードエージェントを一番上に固定",
   "Delete old threads": "古い thread を削除",
   "Keep forever": "ずっと残す",
   "After {count} days": "{count} 日後",

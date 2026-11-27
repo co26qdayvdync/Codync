@@ -2062,6 +2062,7 @@
   "Keyboard for the remote screen": "원격 화면 키보드",
   "Couldn't connect to the remote screen. Check the computer's connection and try again.": "원격 화면에 연결할 수 없습니다. 컴퓨터의 연결을 확인하고 다시 시도하세요.",
   "Move active bots to the top": "활동한 봇을 맨 위로 이동",
+  "Freeze the lead bot at the top": "리드 에이전트를 맨 위에 고정",
   "Delete old threads": "오래된 thread 삭제",
   "Keep forever": "계속 보관",
   "After {count} days": "{count}일 후",

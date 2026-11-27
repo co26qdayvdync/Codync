@@ -2062,6 +2062,7 @@
   "Keyboard for the remote screen": "遠端螢幕的鍵盤",
   "Couldn't connect to the remote screen. Check the computer's connection and try again.": "無法連線到遠端螢幕。請檢查電腦的網路連線後再試一次。",
   "Move active bots to the top": "將有新動態的機器人移到最前面",
+  "Freeze the lead bot at the top": "將主助理固定在清單頂部",
   "Delete old threads": "刪除舊的 thread",
   "Keep forever": "永久保留",
   "After {count} days": "{count} 天後",
