@@ -313,6 +313,33 @@ export class BotMirror extends Observable {
     return this.hello?.backends.find((b) => b.id === id)?.registry ?? id
   }
 
+  /** A held message stopped being held (fired, cancelled, edited into a send): its `hello.held` copy must go so
+   * the tray cannot put the old scheduled row back once `allEntries` hides the removed entry. */
+  protected forgetHeld(id: string) {
+    const held = this.hello?.held
+    if (!this.hello || !held?.some((e) => e.id === id)) return
+    this.hello = { ...this.hello, held: held.filter((e) => e.id !== id) }
+  }
+
+  /** A live entry event for a message the tray may be showing. One still scheduled joins `hello.held` even
+   * when this window has never seen it: another window can schedule a queued message that sits below the loaded
+   * history, and that event is not inserted into the transcript (it would open a gap for `loadOlder`). A new
+   * time or text replaces the copy. Once it fired or was taken back, the copy goes. */
+  protected trackHeld(entry: Entry) {
+    if (!this.hello) return
+    const held = this.hello.held ?? []
+    const known = held.some((e) => e.id === entry.id)
+    if (entry.data.status === 'scheduled' && entry.data.removed !== true) {
+      this.hello = {
+        ...this.hello,
+        held: known ? held.map((e) => (e.id === entry.id ? entry : e)) : [...held, entry],
+      }
+      return
+    }
+    if (!known) return
+    this.hello = { ...this.hello, held: held.filter((e) => e.id !== entry.id) }
+  }
+
   /** A bot's or group's chat, trace entries included. */
   allEntries(botId: string) {
     const list = this.entries.get(botId)
@@ -366,7 +393,11 @@ export class BotMirror extends Observable {
     if (i >= 0) {
       // A late API response mustn't undo a newer SSE update.
       if (e.rev < list[i]!.rev) return
+      const moved = list[i]!.seq !== e.seq
       list[i] = e
+      // A scheduled message takes a new seq when it fires. Replacing only its row would leave the delivered
+      // text back at the time it was scheduled instead of beside its reply.
+      if (moved) list.sort((a, b) => a.seq - b.seq)
     } else {
       // Replace the optimistic copy of a message we sent.
       const nonce = e.kind === 'user' ? e.data.clientNonce : undefined
