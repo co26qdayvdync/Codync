@@ -32,9 +32,15 @@ pub(crate) fn patched(stored: &BotConfig, patch: &Value) -> Result<BotConfig> {
     if cfg.name != stored.name && patch.get("autoName").is_none() {
         cfg.auto_name = false;
     }
-    // A field the patch leaves out keeps its saved value, so a partial update never resets what it
-    // doesn't name; what it does send is checked against the model it will run on (`checks::change`).
-    // So do modes, to one agent: on another, a picked mode becomes its Auto mode, as the apps do it.
+    // A field the patch leaves out keeps its saved value. A model's own settings are the
+    // exception: they belong to the model being left, so a different model or agent with no
+    // `modelOptions` in the patch starts on the new model's defaults, as the picker does.
+    // Settings the patch does send stay, and `checks::change` refuses the whole update
+    // before approval when the new model does not list one of them.
+    if (cfg.model != stored.model || cfg.backend != stored.backend) && patch.get("modelOptions").is_none() {
+        cfg.model_options.clear();
+    }
+    // A mode belongs to one agent: on another, and with none picked, it becomes that agent's Auto.
     if cfg.backend != stored.backend && patch.get("mode").is_none() {
         cfg.mode = codync_agent::modes::on_other_agent(cfg.mode.as_deref());
     }
@@ -101,20 +107,18 @@ mod tests {
     }
 
     #[test]
-    fn a_model_change_keeps_the_saved_options_unless_the_patch_sets_them() {
+    fn a_model_change_starts_on_the_new_models_defaults_unless_the_patch_sets_them() {
         let stored: BotConfig = serde_json::from_value(
             json!({"id": "a", "name": "a", "backend": "claude", "model": "opus", "modelOptions": {"effort": "low"}}),
         )
         .expect("a bot config");
         let effort = |patch| patched(&stored, &patch).expect("a valid patch").model_options.get("effort").cloned();
-        assert_eq!(
-            effort(json!({"model": "sonnet"})).as_deref(),
-            Some("low"),
-            "left out: kept, and the change is checked against the model it will run on"
-        );
+        assert_eq!(effort(json!({"model": "sonnet"})), None, "left out: the new model's defaults");
+        assert_eq!(effort(json!({"backend": "codex"})), None, "another agent: the old model's settings do not travel");
         let sent = json!({"model": "sonnet", "modelOptions": {"effort": "medium"}});
         assert_eq!(effort(sent).as_deref(), Some("medium"));
         assert_eq!(effort(json!({"name": "b"})).as_deref(), Some("low"), "same model: kept");
+        assert_eq!(effort(json!({"model": "opus"})).as_deref(), Some("low"), "the same model again: kept");
         let cleared = patched(&stored, &json!({"model": "sonnet", "modelOptions": {}})).expect("a valid patch");
         assert!(cleared.model_options.is_empty(), "an empty object the patch sends is a clear");
     }

@@ -35,8 +35,9 @@ pub const MAX_CARD_DETAIL: usize = 2000;
 pub const INSTRUCTIONS: &str = "You manage the user's team of Codync bots. list_team shows every bot's setup and \
 routines, yours and hidden bots included. create_bot adds a bot, which can manage the team too; update_bot changes a \
 bot's name, instructions, model and its settings (effort…), fallbacks, avatar, routines, visibility or pause, yours included \
-(a new model of your own takes effect after this turn; a field you leave out keeps its saved value, and what you \
-send is checked against the model it will run on). A paused bot answers nothing and spends nothing until it is \
+(a new model of your own takes effect after this turn; a field you leave out keeps its saved value, except the \
+model's own settings, which reset when the model changes unless you send modelOptions. A setting you send that the \
+new model does not list refuses the whole change before approval). A paused bot answers nothing and spends nothing until it is \
 resumed, so pausing stops its credits. list_models shows the model ids an agent offers, each with its settings, for \
 picking a bot's model, its modelOptions or a fallback's model — pass botId to use a managed bot's agent, or query \
 to match by name. validateOnly checks a change and returns whether it is valid, without applying it or asking. Each \
@@ -115,7 +116,7 @@ pub fn tools() -> Value {
     let mut setup = json!({
         "name": {"type": "string", "description": format!("At most {MAX_NAME_CHARS} characters.")},
         "instructions": {"type": "string", "description": format!("Standing instructions: what the bot is for and rules that always apply, at most {MAX_INSTRUCTIONS_CHARS} characters. When the user approves your changes, their card shows at most {MAX_CARD_DETAIL} characters of the whole change, routines included.")},
-        "model": {"type": "string", "description": "The agent's model id, as list_models shows; empty for the agent's default."},
+        "model": {"type": "string", "description": "The agent's model id, as list_models shows; empty for the agent's default. With no modelOptions, the new model starts on its own defaults."},
         "modelOptions": {"type": "object", "additionalProperties": {"type": "string"}, "description": "The model's settings by id, as list_team shows them (Claude's effort, Codex's reasoning_effort…), each one of the values the agent lists for that model. Replaces them all; empty for the model's defaults."},
         "fallbacks": {"type": "array", "items": {"type": "object", "properties": {"agent": {"type": "string"}, "model": {"type": "string", "description": "A model id list_models shows for that agent; leave out for its default."}}, "required": ["agent"]}, "description": "Up to 3 agents, in order, that carry on when the bot's own can't answer (out of usage, rate limited, signed out); each a different agent, not the bot's own. Replaces the list; empty removes it."},
         "avatarColor": {"type": "string", "enum": AVATAR_COLORS},
