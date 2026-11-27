@@ -179,7 +179,11 @@ fn a_model_change_checks_the_options_the_patch_will_leave() {
     assert!(check(json!({"name": "Renamed"})).is_none(), "no model change: no catalog read");
     let model_only = check(json!({"model": "sonnet"})).expect("a model change");
     assert_eq!(model_only.model.as_deref(), Some("sonnet"));
-    assert!(model_only.options.is_empty(), "the new model starts on its own defaults");
+    assert_eq!(
+        model_only.options.get("effort").map(String::as_str),
+        Some("low"),
+        "left out: the saved settings stay, and are checked against the new model"
+    );
     let explicit = check(json!({"model": "sonnet", "modelOptions": {"effort": "high"}})).expect("a model change");
     assert_eq!(explicit.options.get("effort").map(String::as_str), Some("high"));
     let options_only = check(json!({"modelOptions": {"effort": "high"}})).expect("a settings change");
