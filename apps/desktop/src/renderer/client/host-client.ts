@@ -110,7 +110,7 @@ const channelError = (e: CallError) => new HostError(e.status ?? 0, e.message, e
 export type HostEvent =
   | { type: 'icons'; iconsRevision: number; icons: import('@shared/custom-icons').CustomIcons }
   /** `network` is null from hosts before the network view. `catchUp` events follow before the live ones (null from hosts before 2.32.0). `workflows` is absent on older hosts. */
-  | { type: 'hello'; hostId: string; rev: number; usage: Usage; screen: ScreenState | null; network: NetworkView | null; icons?: import('@shared/custom-icons').CustomIcons; catchUp: number | null; workflows?: boolean; scheduleSend?: boolean; held?: Entry[] }
+  | { type: 'hello'; hostId: string; rev: number; usage: Usage; screen: ScreenState | null; network: NetworkView | null; icons?: import('@shared/custom-icons').CustomIcons; catchUp: number | null; workflows?: boolean; scheduleSend?: boolean; held?: Entry[]; botPause?: boolean }
   | { type: 'bot'; bot: Bot }
   /** Live only: a bot is done, needs you or failed (never replayed in a catch-up). */
   | { type: 'alert'; alert: HostAlert }
@@ -166,9 +166,11 @@ export function parseEvent(line: string): HostEvent | null {
         screen: normalizeScreen(raw.screen as ScreenState | undefined),
         network: (raw.network as NetworkView | undefined) ?? null,
         workflows: raw.workflows === true,
-        // A hello from an older host omits both: left undefined so the value already known stands.
+        // A hello from an older host omits these: left undefined so the value already known stands.
         scheduleSend: typeof raw.scheduleSend === 'boolean' ? raw.scheduleSend : undefined,
         held: Array.isArray(raw.held) ? (raw.held as Entry[]) : undefined,
+        // Missing on an older host: left undefined so a version gate can still apply, and a later hello can keep a true.
+        botPause: typeof raw.botPause === 'boolean' ? raw.botPause : undefined,
         icons: raw.icons as import('@shared/custom-icons').CustomIcons | undefined,
         catchUp: typeof raw.catchUp === 'number' ? raw.catchUp : null,
       }
@@ -291,6 +293,7 @@ export class HostClient {
         workflows: h.workflows === true,
         scheduleSend: h.scheduleSend === true,
         held: h.held ?? [],
+        botPause: h.botPause === true,
       }
     })
   }

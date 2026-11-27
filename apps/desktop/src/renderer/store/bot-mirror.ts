@@ -21,7 +21,7 @@ import type { RunDetail, WorkflowDetail, WorkflowStep, WorkflowSummary } from '.
 import { rosterOrder } from '../lib/computer-roster'
 import { HOST_UPDATE_WAIT, hostVersionLine, offerHostUpdate, type HostUpdate, type HostUpdateOffer, type HostVersionLine } from '../lib/host-update'
 import { Observable } from '../lib/observable'
-import { hostHasPause } from '../lib/host-pause'
+import { offersBotPause } from '../lib/host-pause'
 import { hostHasSections } from '../lib/roster-sections'
 import { ComposerDrafts } from '@shared/composer-drafts'
 import { canLoadHistory } from '@shared/mirror-window'
@@ -256,9 +256,9 @@ export class BotMirror extends Observable {
     return this.hostVersion !== null && !isBelow(this.hostVersion.version, LEAD_CHOICE_HOST)
   }
 
-  /** The host pauses a bot (an older one ignores `paused`): the row's menu and this editor offer it only then. */
+  /** The host pauses a bot: hello says `botPause`, or its version is at least 2.55.0. An older host ignores `paused`. */
   get hasBotPause() {
-    return this.hostVersion !== null && hostHasPause(this.hostVersion.version)
+    return offersBotPause(this.hostVersion?.version ?? null, this.hello?.botPause)
   }
 
   /** The user names this computer here, on a host that takes it: a cloud computer is named in Codync Cloud. */

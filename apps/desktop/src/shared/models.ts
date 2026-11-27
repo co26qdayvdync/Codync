@@ -759,6 +759,8 @@ export interface Hello {
   credentialsReset?: boolean
   /** The host can store workflows. Missing means it cannot. */
   workflows?: boolean
+  /** This host honours `updateBot`'s `paused`. Missing on an older host, which ignores the field. */
+  botPause?: boolean
   /** Bots have `projects` and `worktreeMode`, and `cwd` is always the bot's own folder. */
   projects?: boolean
   /** A message can be scheduled for later (`scheduleSend`; the host's sweep delivers it). Missing means it cannot. */

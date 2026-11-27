@@ -293,7 +293,7 @@ export class BotSync extends BotMirror {
         this.usage = event.usage
         this.screen = event.screen
         this.network = event.network
-        if (this.hello) this.hello = { ...this.hello, workflows: event.workflows, scheduleSend: event.scheduleSend ?? this.hello.scheduleSend, held: event.held ?? this.hello.held }
+        if (this.hello) this.hello = { ...this.hello, workflows: event.workflows, scheduleSend: event.scheduleSend ?? this.hello.scheduleSend, held: event.held ?? this.hello.held, botPause: event.botPause ?? this.hello.botPause }
         if (event.workflows) void this.reloadWorkflowMirror()
         else this.workflows = []
         if (event.rev < this.rev) this.rev = 0

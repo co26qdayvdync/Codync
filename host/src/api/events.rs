@@ -89,6 +89,8 @@ pub fn events_stream(
         // Every message still held for later, in any chat: the client's tray shows them without loading
         // each chat's whole transcript (a held message can sit far outside the newest-entries window).
         "held": hub.store.scheduled_pending()?,
+        // Same capability as the `hello` method: this host honours `paused`. See `api/host.rs`.
+        "botPause": true,
     });
     catch_up.insert(0, hello);
 

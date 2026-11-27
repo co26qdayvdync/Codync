@@ -136,6 +136,10 @@ pub(super) async fn call(hub: &Arc<Hub>, caller: &Caller, method: &str, b: Value
                 // Every message still held for later, in any chat: the client's tray shows them without
                 // loading each chat's whole transcript (an old held message sits outside its window).
                 "held": hub.store.scheduled_pending()?,
+                // This host honours `updateBot`'s `paused`. The version stays 2.54.0: a bump would make the
+                // updater treat this build as the 2.55.0 release. Clients show Pause when this is true, or
+                // when the version is at least 2.55.0. A host that omits it still ignores the field.
+                "botPause": true,
             })
         }
         "refreshBackends" => {

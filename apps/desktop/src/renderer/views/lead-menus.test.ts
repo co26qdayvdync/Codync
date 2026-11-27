@@ -54,7 +54,7 @@ test('a bot row pauses and resumes it; a group has nothing to pause', () => {
   assert.deepEqual(pauseItems(group, store), [], 'a group has no agent')
 })
 
-test('a host older than 2.54.0 has no pause: it would ignore the field', () => {
+test('a flagless host below 2.55.0 has no pause: it would ignore the field', () => {
   const { store } = computer(true, false)
   assert.deepEqual(pauseItems({ id: 'bot', lead: false, paused: false } as Bot, store), [], 'an old host is not offered it')
 })
