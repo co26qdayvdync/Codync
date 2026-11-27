@@ -136,6 +136,19 @@ test("today's events read the same, whatever the host's version", () => {
   assert.deepEqual([bot.bot.maxThreads, bot.bot.threadWorktrees, bot.bot.work[0]!.thread], [4, true, 'thread-1'])
 })
 
+test("an older host's updateBot that omits paused did not pause the bot", () => {
+  // Success with the field left out: the host ignored it. Missing reads as not paused, and it is not an applied pause.
+  assert.deepEqual(pauseEcho(true, { bot: { id: 'b', name: 'Bot' } }), { applied: false, paused: false })
+  assert.deepEqual(pauseEcho(false, { bot: { id: 'b', name: 'Bot' } }), { applied: false, paused: false })
+  assert.deepEqual(pauseEcho(true, { bot: { id: 'b', paused: false } }), { applied: false, paused: false })
+  assert.deepEqual(pauseEcho(true, { bot: { id: 'b', paused: true } }), { applied: true, paused: true })
+  assert.deepEqual(pauseEcho(false, { bot: { id: 'b', paused: false } }), { applied: true, paused: false })
+  assert.deepEqual(pauseEcho(false, { bot: { id: 'b', paused: true } }), { applied: false, paused: true })
+  assert.deepEqual(pauseEcho(true, {}), { applied: false, paused: false })
+  assert.deepEqual(pauseEcho(true, { bot: { id: 'b', paused: 'yes' } }), { applied: false, paused: false })
+  assert.deepEqual(pauseEcho(true, null), { applied: false, paused: false })
+})
+
 test("an older host's answers read as today's: the bot of updateBot, a page of history, a thread's transcript", async () => {
   const { client } = await clientOf('2.50.0', {
     updateBot: { bot: oldBot },

@@ -2539,5 +2539,9 @@
   "Told of mail as it comes": "편지가 오면 바로 알림받음",
   "Idle": "대기 중",
   "Older sessions: {count}": "이전 세션 {count}개",
-  "More sessions: {count}": "다른 세션 {count}개"
+  "More sessions: {count}": "다른 세션 {count}개",
+  "Let this bot create bots, change any bot's setup including its model and fallbacks, and pause or resume it. The bots it creates can too.": "이 봇이 봇을 생성하고, 모델과 대체 에이전트를 포함한 모든 봇의 설정을 변경하며, 일시 정지하거나 다시 실행하도록 합니다. 그것이 생성하는 봇도 가능합니다.",
+  "Pause bot": "Bot 일시정지",
+  "Resume bot": "Bot 다시 실행",
+  "It answers nothing and spends nothing until you resume it: new messages are refused, and its queued routine runs are cancelled.": "다시 실행할 때까지 아무것도 답하지 않고 아무것도 소모하지 않습니다. 새 메시지는 거부되고 대기 중이던 루틴 실행은 취소됩니다."
 }

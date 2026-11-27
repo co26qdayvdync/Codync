@@ -2539,5 +2539,9 @@
   "Told of mail as it comes": "Erfährt sofort von Post",
   "Idle": "Bereit",
   "Older sessions: {count}": "Ältere Sitzungen: {count}",
-  "More sessions: {count}": "Weitere Sitzungen: {count}"
+  "More sessions: {count}": "Weitere Sitzungen: {count}",
+  "Let this bot create bots, change any bot's setup including its model and fallbacks, and pause or resume it. The bots it creates can too.": "Diesem Bot erlauben, Bots zu erstellen, die Einrichtung jedes Bots zu ändern – Modell und Ersatzagenten eingeschlossen – und ihn anzuhalten oder fortzusetzen. Die von ihm erstellten Bots dürfen das ebenfalls.",
+  "Pause bot": "Bot pausieren",
+  "Resume bot": "Bot fortsetzen",
+  "It answers nothing and spends nothing until you resume it: new messages are refused, and its queued routine runs are cancelled.": "Er antwortet auf nichts und verbraucht nichts, bis du ihn fortsetzt: Neue Nachrichten werden abgelehnt, und anstehende Routine-Läufe werden abgebrochen."
 }

@@ -2539,5 +2539,9 @@
   "Told of mail as it comes": "来信即得知",
   "Idle": "空闲",
   "Older sessions: {count}": "较早的会话：{count}",
-  "More sessions: {count}": "更多会话：{count}"
+  "More sessions: {count}": "更多会话：{count}",
+  "Let this bot create bots, change any bot's setup including its model and fallbacks, and pause or resume it. The bots it creates can too.": "让这个 Bot 创建 Bot，修改任何 Bot 的设置（包括模型和备用），并暂停或恢复它。它创建的 Bot 也可以。",
+  "Pause bot": "暂停 Bot",
+  "Resume bot": "恢复 Bot",
+  "It answers nothing and spends nothing until you resume it: new messages are refused, and its queued routine runs are cancelled.": "在你恢复之前，它不回答任何消息，也不消耗任何用量：新消息会被拒绝，排队中的例行任务运行会被取消。"
 }
