@@ -509,6 +509,9 @@ mod tests {
 
         let ran = running.await.unwrap().unwrap();
         assert!(matches!(ran, super::Ran::Later));
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
     /// A pause can land while dreaming waits on the shared lock and the file scan: its pause check ran before both.
     /// Dreaming spends when it goes on, so the check is repeated after them, at the one point the test can hold still.
     #[tokio::test]
@@ -516,24 +519,24 @@ mod tests {
         let dir = std::env::temp_dir().join(format!("codync-dream-pause-{}", uuid::Uuid::new_v4()));
         std::fs::create_dir_all(&dir).unwrap();
         let store = Store::open(&dir.join("t.db")).unwrap();
-        let cfg: crate::store::BotConfig = serde_json::from_value(json!({
+        let cfg: BotConfig = serde_json::from_value(json!({
             "id": "bot", "name": "B", "backend": "custom", "cwd": dir,
             // A run that is not stopped reaches `one_shot`, which must fail: that failure is the proof it was spent.
             "command": "codync-nonexistent-dream-test-agent", "permission": "auto"
         }))
         .expect("a bot");
         store.save_bot(&cfg).expect("saved");
-        let hub = std::sync::Arc::new(crate::hub::Hub::new(
+        let hub = std::sync::Arc::new(Hub::new(
             store,
             "dream-test".into(),
-            crate::remote::identity::Identity::load_or_create(&dir).expect("identity"),
+            Identity::load_or_create(&dir).expect("identity"),
             "test".into(),
             0,
         ));
         // Something worth dreaming about, so a run that is not stopped does not stop at `worth`.
         hub.store
             .insert_entry(
-                &crate::store::Lane::main("bot"),
+                &Lane::main("bot"),
                 EntryKind::User,
                 1,
                 &json!({"text": "I moved to Lisbon and started a new job there"}),

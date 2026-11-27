@@ -185,6 +185,8 @@ fn a_model_change_checks_the_options_the_patch_will_leave() {
     let options_only = check(json!({"modelOptions": {"effort": "high"}})).expect("a settings change");
     assert_eq!(options_only.model.as_deref(), Some("opus"), "checked against the bot's own model");
     assert_eq!(options_only.options.get("effort").map(String::as_str), Some("high"));
+}
+
 /// A manager pauses and resumes a bot; `list_team` says where each bot stands.
 #[tokio::test]
 async fn a_manager_pauses_and_resumes_a_bot() {

@@ -12,7 +12,9 @@ use crate::routines::{Folder, Trigger};
 use crate::store::{AVATAR_COLORS, AVATAR_SHAPES, BotConfig, EntryKind, Fallback, Lane};
 use anyhow::{Context, Result, anyhow, bail};
 use serde_json::{Map, Value, json};
-use std::collections::{BTreeMap, BTreeSet};
+#[cfg(test)]
+use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 use std::sync::{Arc, LazyLock};
 use std::time::Duration;
 use tokio::sync::oneshot;
@@ -100,6 +102,8 @@ impl std::error::Error for Refused {}
 
 /// What a change leaves a bot's model on when it touches the model or its settings, after the
 /// patch's own rule has run (a new model without explicit settings starts on its defaults).
+#[cfg(test)]
+#[allow(dead_code)]
 struct ModelCheck {
     backend: String,
     login_profile: Option<String>,
@@ -566,6 +570,7 @@ fn setup_patch(args: &Value, fallbacks: &[Fallback]) -> Result<Map<String, Value
 
 /// The effective model and settings a change leaves a bot on, when it touches either: the patch's
 /// own rule decides whether a new model keeps the settings sent with it or starts on its defaults.
+#[cfg(test)]
 fn model_check(target: &BotConfig, fields: &Map<String, Value>) -> Result<Option<ModelCheck>> {
     if !fields.contains_key("model") && !fields.contains_key("modelOptions") {
         return Ok(None);

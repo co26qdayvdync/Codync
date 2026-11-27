@@ -287,7 +287,8 @@ impl Actor {
                         // answers, an expanded `/skill` and its files' paths. An edit rebuilds that from the
                         // row that landed rather than replacing all of it with the sheet's bare text.
                         let prompt = crate::chat::prompt::of_entry(&self.hub, &self.cfg, &saved);
-                        if let Some(Queued::User { text: waiting, .. }) = self.queue.get_mut(at) {
+                        if let Some(Admitted { item: Queued::User { text: waiting, .. }, .. }) = self.queue.get_mut(at)
+                        {
                             prompt.clone_into(waiting);
                         }
                     }
