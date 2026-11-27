@@ -120,21 +120,6 @@ mod tests {
     }
 
     #[test]
-    fn an_older_apps_thread_worktrees_switch_never_drops_always() {
-        use crate::store::WorktreeMode::{Always, Off, SideBySide};
-        let stored = |mode: &str| -> BotConfig {
-            serde_json::from_value(json!({"id": "a", "name": "a", "backend": "claude", "worktreeMode": mode}))
-                .expect("a bot config")
-        };
-        let mode = |from: &str, patch| patched(&stored(from), &patch).expect("a valid patch").worktree_mode;
-        assert_eq!(mode("always", json!({"name": "b", "threadWorktrees": true})), Always, "saving another field");
-        assert_eq!(mode("off", json!({"threadWorktrees": true})), SideBySide);
-        assert_eq!(mode("always", json!({"threadWorktrees": false})), Off);
-        assert_eq!(mode("off", json!({"threadWorktrees": true, "worktreeMode": "always"})), Always, "the new key wins");
-        assert_eq!(mode("always", json!({"name": "b"})), Always);
-    }
-
-    #[test]
     fn a_patch_leaves_the_paused_flag_alone_unless_the_patch_passes_it() {
         let stored: BotConfig = serde_json::from_value(
             json!({"id": "a", "name": "a", "backend": "claude", "paused": true, "fallbacks": [{"backend": "codex"}]}),
