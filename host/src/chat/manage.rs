@@ -36,8 +36,8 @@ pub const INSTRUCTIONS: &str = "You manage the user's team of Codync bots. list_
 routines, yours and hidden bots included. create_bot adds a bot, which can manage the team too; update_bot changes a \
 bot's name, instructions, model and its settings (effort…), fallbacks, avatar, routines, visibility or pause, yours included \
 (a new model of your own takes effect after this turn; a field you leave out keeps its saved value, except the \
-model's own settings, which reset when the model changes unless you send modelOptions. A setting you send that the \
-new model does not list refuses the whole change before approval). A paused bot answers nothing and spends nothing until it is \
+model's own settings, which reset when the model or the agent changes unless you send modelOptions. A setting you \
+send that the new model or agent does not list refuses the whole change before approval). A paused bot answers nothing and spends nothing until it is \
 resumed, so pausing stops its credits. list_models shows the model ids an agent offers, each with its settings, for \
 picking a bot's model, its modelOptions or a fallback's model — pass botId to use a managed bot's agent, or query \
 to match by name. validateOnly checks a change and returns whether it is valid, without applying it or asking. Each \
@@ -101,8 +101,9 @@ impl std::fmt::Display for Refused {
 
 impl std::error::Error for Refused {}
 
-/// What a change leaves a bot's model on when it touches the model or its settings, after the
-/// patch's own rule has run (a new model without explicit settings starts on its defaults).
+/// What a change leaves a bot's model on when it touches the model, the agent, or the model's
+/// settings, after the patch's own rule has run (a new model or agent without explicit settings
+/// starts on its defaults).
 #[cfg(test)]
 #[allow(dead_code)]
 struct ModelCheck {
@@ -569,11 +570,12 @@ fn setup_patch(args: &Value, fallbacks: &[Fallback]) -> Result<Map<String, Value
     Ok(patch)
 }
 
-/// The effective model and settings a change leaves a bot on, when it touches either: the patch's
-/// own rule decides whether a new model keeps the settings sent with it or starts on its defaults.
+/// The effective model and settings a change leaves a bot on, when it touches the model, the agent,
+/// or the model's settings. A new model or agent with no settings of its own starts on defaults.
+/// Settings sent with the change stay, so the check can refuse the whole update when they do not fit.
 #[cfg(test)]
 fn model_check(target: &BotConfig, fields: &Map<String, Value>) -> Result<Option<ModelCheck>> {
-    if !fields.contains_key("model") && !fields.contains_key("modelOptions") {
+    if !fields.contains_key("model") && !fields.contains_key("modelOptions") && !fields.contains_key("backend") {
         return Ok(None);
     }
     let cfg = crate::hub::patched(target, &Value::Object(fields.clone()))?;

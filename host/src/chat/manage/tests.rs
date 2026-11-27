@@ -180,8 +180,21 @@ fn a_model_change_checks_the_options_the_patch_will_leave() {
     let model_only = check(json!({"model": "sonnet"})).expect("a model change");
     assert_eq!(model_only.model.as_deref(), Some("sonnet"));
     assert!(model_only.options.is_empty(), "the new model starts on its own defaults");
+    let agent_only =
+        model_check(&target, json!({"backend": "codex"}).as_object().unwrap()).unwrap().expect("an agent change");
+    assert_eq!(agent_only.backend, "codex");
+    assert!(agent_only.options.is_empty(), "another agent starts on its own defaults");
     let explicit = check(json!({"model": "sonnet", "modelOptions": {"effort": "high"}})).expect("a model change");
     assert_eq!(explicit.options.get("effort").map(String::as_str), Some("high"));
+    let explicit_agent =
+        model_check(&target, json!({"backend": "codex", "modelOptions": {"effort": "high"}}).as_object().unwrap())
+            .unwrap()
+            .expect("an agent change");
+    assert_eq!(
+        explicit_agent.options.get("effort").map(String::as_str),
+        Some("high"),
+        "sent settings stay for the check"
+    );
     let options_only = check(json!({"modelOptions": {"effort": "high"}})).expect("a settings change");
     assert_eq!(options_only.model.as_deref(), Some("opus"), "checked against the bot's own model");
     assert_eq!(options_only.options.get("effort").map(String::as_str), Some("high"));

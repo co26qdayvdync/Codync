@@ -36,7 +36,7 @@ pub(crate) fn patched(stored: &BotConfig, patch: &Value) -> Result<BotConfig> {
     // exception: they belong to the model being left, so a different model or agent with no
     // `modelOptions` in the patch starts on the new model's defaults, as the picker does.
     // Settings the patch does send stay, and `checks::change` refuses the whole update
-    // before approval when the new model does not list one of them.
+    // before approval when the new model or agent does not list one of them.
     if (cfg.model != stored.model || cfg.backend != stored.backend) && patch.get("modelOptions").is_none() {
         cfg.model_options.clear();
     }
